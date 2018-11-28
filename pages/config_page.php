@@ -1,19 +1,20 @@
 <?php
 /**
- * Slack Integration
- * Copyright (C) Karim Ratib (karim@meedan.com)
+ * Teams Integration
+ * Copyright (C) Jérôme Lepage (jerome.lepage@edpsciences.org)
+ * Forked from Slack integration by Karim Ratib (karim@meedan.com)
  *
- * Slack Integration is free software; you can redistribute it and/or
+ * Teams Integration is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License 2
  * as published by the Free Software Foundation.
  *
- * Slack Integration is distributed in the hope that it will be useful,
+ * Teams Integration is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Slack Integration; if not, write to the Free Software
+ * along with Teams Integration; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  * or see http://www.gnu.org/licenses/.
  */
@@ -41,7 +42,7 @@ print_manage_menu( 'manage_plugin_page.php' );
     </h4>
 </div>
 
-<?php echo form_security_field( 'plugin_Slack_config' ) ?>
+<?php echo form_security_field( 'plugin_Teams_config' ) ?>
 <div class="widget-body">
 <div class="widget-main no-padding">
 <div class="table-responsive">
@@ -63,10 +64,10 @@ print_manage_menu( 'manage_plugin_page.php' );
       </td>
       <td colspan="2">
         <p>
-          Specifies the mapping between Mantis project names and Slack webhooks.
+          Specifies the mapping between Mantis project names and Teams webhooks.
         </p>
         <p>
-          Option name is <strong>plugin_Slack_url_webhooks</strong> and is an array of 'Mantis project name' => 'Slack webhook'.
+          Option name is <strong>plugin_Teams_url_webhooks</strong> and is an array of 'Mantis project name' => 'Teams webhook'.
           Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
           The current value of this option is:<pre><?php var_export(plugin_config_get( 'url_webhooks' ))?></pre>
         </p>
@@ -135,10 +136,10 @@ print_manage_menu( 'manage_plugin_page.php' );
       </td>
       <td colspan="2">
         <p>
-          Specifies the mapping between Mantis project names and Slack #channels.
+          Specifies the mapping between Mantis project names and Teams #channels.
         </p>
         <p>
-          Option name is <strong>plugin_Slack_channels</strong> and is an array of 'Mantis project name' => 'Slack channel name'.
+          Option name is <strong>plugin_Teams_channels</strong> and is an array of 'Mantis project name' => 'Teams channel name'.
           Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
           The current value of this option is:<pre><?php var_export(plugin_config_get( 'channels' ))?></pre>
         </p>
@@ -151,10 +152,10 @@ print_manage_menu( 'manage_plugin_page.php' );
       </td>
       <td colspan="2">
         <p>
-          Specifies the bug fields that should be attached to the Slack notifications.
+          Specifies the bug fields that should be attached to the Teams notifications.
         </p>
         <p>
-          Option name is <strong>plugin_Slack_columns</strong> and is an array of bug column names.
+          Option name is <strong>plugin_Teams_columns</strong> and is an array of bug column names.
           Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
           <?php
             $t_columns = columns_get_all( @$t_project_id );
@@ -172,10 +173,10 @@ print_manage_menu( 'manage_plugin_page.php' );
       </td>
       <td colspan="2">
         <p>
-          Specifies the mapping between Mantis and Slack user names.
+          Specifies the mapping between Mantis and Teams user names.
         </p>
         <p>
-          Option name is <strong>plugin_Slack_usernames</strong> and is an array of 'Mantis user name' => 'Slack user name'.
+          Option name is <strong>plugin_Teams_usernames</strong> and is an array of 'Mantis user name' => 'Teams user name'.
           Array options must be set using the <a href="adm_config_report.php">Configuration Report</a> screen.
           The current value of this option is:<pre><?php var_export(plugin_config_get( 'usernames' ))?></pre>
         </p>

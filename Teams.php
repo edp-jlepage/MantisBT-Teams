@@ -1,24 +1,25 @@
 <?php
 /**
- * Slack Integration
- * Copyright (C) Karim Ratib (karim@meedan.com)
+ * Teams Integration
+ * Copyright (C) Jérôme Lepage (jerome.lepage@edpsciences.org)
+ * Forked from Slack integration by Karim Ratib (karim@meedan.com)
  *
- * Slack Integration is free software; you can redistribute it and/or
+ * Teams Integration is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License 2
  * as published by the Free Software Foundation.
  *
- * Slack Integration is distributed in the hope that it will be useful,
+ * Teams Integration is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Slack Integration; if not, write to the Free Software
+ * along with Teams Integration; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  * or see http://www.gnu.org/licenses/.
  */
 
-class SlackPlugin extends MantisPlugin {
+class TeamsPlugin extends MantisPlugin {
     var $skip = false;
 
     function register() {
@@ -29,9 +30,9 @@ class SlackPlugin extends MantisPlugin {
         $this->requires = array(
             'MantisCore' => '2.0.0',
         );
-        $this->author = 'Karim Ratib';
-        $this->contact = 'karim@meedan.com';
-        $this->url = 'http://code.meedan.com';
+        $this->author = 'Jérôme Lepage';
+        $this->contact = 'jerome.lepage@edpsciences.org';
+        $this->url = 'http://www.edpsciences.org';
     }
 
     function install() {
@@ -114,7 +115,7 @@ class SlackPlugin extends MantisPlugin {
         echo '<th class="category">' . plugin_lang_get( 'skip' ) . '</th>';
         echo '<td colspan="5">';
         echo '<label>';
-        echo '<input ', helper_get_tab_index(), ' name="slack_skip" class="ace" type="checkbox" />';
+        echo '<input ', helper_get_tab_index(), ' name="teams_skip" class="ace" type="checkbox" />';
         echo '<span class="lbl"></span>';
         echo '</label>';
         echo '</td></tr>';
@@ -122,7 +123,7 @@ class SlackPlugin extends MantisPlugin {
 
     function bug_report_update($event, $bug, $bug_id) {
         $this->skip = $this->skip ||
-            gpc_get_bool('slack_skip') ||
+            gpc_get_bool('teams_skip') ||
             $this->skip_private($bug) ||
             $this->skip_event($event);
 
@@ -146,7 +147,7 @@ class SlackPlugin extends MantisPlugin {
 
     function bug_action($event, $action, $bug_id) {
         $this->skip = $this->skip ||
-            gpc_get_bool('slack_skip') ||
+            gpc_get_bool('teams_skip') ||
             plugin_config_get('skip_bulk');
 
         if ($action !== 'DELETE') {
@@ -159,7 +160,7 @@ class SlackPlugin extends MantisPlugin {
         $bug = bug_get($bug_id);
 
         $this->skip = $this->skip ||
-            gpc_get_bool('slack_skip') ||
+            gpc_get_bool('teams_skip') ||
             $this->skip_private($bug) ||
             $this->skip_event($event);
 
@@ -175,7 +176,7 @@ class SlackPlugin extends MantisPlugin {
         $bugnote = bugnote_get($bugnote_id);
 
         $this->skip = $this->skip ||
-            gpc_get_bool('slack_skip') ||
+            gpc_get_bool('teams_skip') ||
             $this->skip_private($bug) ||
             $this->skip_private($bugnote) ||
             $this->skip_event($event);
@@ -203,7 +204,7 @@ class SlackPlugin extends MantisPlugin {
         $bugnote = bugnote_get($bugnote_id);
 
         $this->skip = $this->skip ||
-            gpc_get_bool('slack_skip') ||
+            gpc_get_bool('teams_skip') ||
             $this->skip_private($bug) ||
             $this->skip_private($bugnote) ||
             $this->skip_event($event);
@@ -318,22 +319,33 @@ class SlackPlugin extends MantisPlugin {
         curl_setopt($ch, CURLOPT_CUSTOMREQUEST, 'POST');
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         $payload = array(
-            'channel' => $channel,
-            'username' => plugin_config_get('bot_name'),
+            '@context' => 'https://schema.org/extensions',
+            '@type' => 'MessageCard',
+            'themeColor' => '0072C6',
+            'title' => 'MantisBT Notification'
             'text' => $msg,
-            'link_names' => plugin_config_get('link_names'),
+            'potentialAction' => array(
+                '@type' => 'OpenUri',
+                'name' => 'See Bug in Mantis',
+                'targets' => array(
+                    'os' => 'default',
+                    'uri' => plugin_config_get('link_names')
+                )
+            )
         );
-        $bot_icon = trim(plugin_config_get('bot_icon'));
-        if (empty($bot_icon)) {
-            $payload['icon_url'] = 'https://raw.githubusercontent.com/infojunkie/MantisBT-Slack/master/mantis_logo.png';
-        } elseif (preg_match('/^:[a-z0-9_\-]+:$/i', $bot_icon)) {
-            $payload['icon_emoji'] = $bot_icon;
-        } elseif ($bot_icon) {
-            $payload['icon_url'] = trim($bot_icon);
-        }
-        if ($attachment) {
-            $payload['attachments'] = array($attachment);
-        }
+
+        //$bot_icon = trim(plugin_config_get('bot_icon'));
+
+        // if (empty($bot_icon)) {
+        //     $payload['icon_url'] = 'https://raw.githubusercontent.com/infojunkie/MantisBT-Slack/master/mantis_logo.png';
+        // } elseif (preg_match('/^:[a-z0-9_\-]+:$/i', $bot_icon)) {
+        //     $payload['icon_emoji'] = $bot_icon;
+        // } elseif ($bot_icon) {
+        //     $payload['icon_url'] = trim($bot_icon);
+        // }
+        // if ($attachment) {
+        //     $payload['attachments'] = array($attachment);
+        // }
 
         curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type:application/json'));
         curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($payload));
@@ -349,8 +361,8 @@ class SlackPlugin extends MantisPlugin {
 
     function bbcode_to_slack($bbtext){
         $bbtags = array(
-            '[b]' => '*','[/b]' => '* ',
-            '[i]' => '_','[/i]' => '_ ',
+            '[b]' => '**','[/b]' => '** ',
+            '[i]' => '*','[/i]' => '* ',
             '[u]' => '_','[/u]' => '_ ',
             '[s]' => '~','[/s]' => '~ ',
             '[sup]' => '','[/sup]' => '',

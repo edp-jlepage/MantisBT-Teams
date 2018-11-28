@@ -1,24 +1,25 @@
 <?php
 /**
- * Slack Integration
- * Copyright (C) Karim Ratib (karim@meedan.com)
+ * Teams Integration
+ * Copyright (C) Jérôme Lepage (jerome.lepage@edpsciences.org)
+ * Forked from Slack integration by Karim Ratib (karim@meedan.com)
  *
- * Slack Integration is free software; you can redistribute it and/or
+ * Teams Integration is free software; you can redistribute it and/or
  * modify it under the terms of the GNU General Public License 2
  * as published by the Free Software Foundation.
  *
- * Slack Integration is distributed in the hope that it will be useful,
+ * Teams Integration is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with Slack Integration; if not, write to the Free Software
+ * along with Teams Integration; if not, write to the Free Software
  * Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA
  * or see http://www.gnu.org/licenses/.
  */
 
-form_security_validate( 'plugin_Slack_config' );
+form_security_validate( 'plugin_Teams_config' );
 access_ensure_global_level( config_get( 'manage_plugin_threshold' ) );
 
 /**
@@ -61,7 +62,7 @@ config_set_if_needed( 'notification_bugnote_add' , gpc_get_bool( 'notification_b
 config_set_if_needed( 'notification_bugnote_edit' , gpc_get_bool( 'notification_bugnote_edit' ) );
 config_set_if_needed( 'notification_bugnote_deleted' , gpc_get_bool( 'notification_bugnote_deleted' ) );
 
-form_security_purge( 'plugin_Slack_config' );
+form_security_purge( 'plugin_Teams_config' );
 
 html_operation_successful( $t_redirect_url );
 layout_page_end();
